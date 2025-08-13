@@ -11,9 +11,9 @@ const passwords = Array.from({ length: 9 }, (_, i) => ({
 
 export default function PasswordGrid() {
   return (
-    <Grid container spacing={2} p={3} sx={{ flexGrow: 1, bgcolor: 'grey.50', overflow: 'auto' }}>
+    <Grid container spacing={2} p={3} columns={3} sx={{ flexGrow: 1, bgcolor: 'grey.50', overflow: 'auto' }}>
       {passwords.map((p) => (
-        <Grid item xs={12} sm={4} key={p.id}>
+        <Grid item xs={1} key={p.id}>
           <Card variant="outlined">
             <CardActionArea>
               <CardContent>
