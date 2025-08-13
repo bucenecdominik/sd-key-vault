@@ -1,35 +1,64 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  TextField,
+  Box,
+} from '@mui/material'
+import { Add as AddIcon, Menu as MenuIcon } from '@mui/icons-material'
+import ItemDetailDialog from './ItemDetailDialog'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={() => setDrawerOpen(true)}>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            My Password Vault
+          </Typography>
+          <IconButton color="inherit" onClick={() => setDialogOpen(true)}>
+            <AddIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <List>
+          <ListItem button>
+            <ListItemText primary="All Items" />
+          </ListItem>
+          <ListItem button>
+            <ListItemText primary="Logins" />
+          </ListItem>
+          <ListItem button>
+            <ListItemText primary="Secure Notes" />
+          </ListItem>
+        </List>
+      </Drawer>
+
+      <Box sx={{ p: 2 }}>
+        <TextField label="Search" variant="outlined" fullWidth sx={{ mb: 2 }} />
+        <Typography variant="body2" color="text.secondary">
+          Your items will appear here.
+        </Typography>
+      </Box>
+
+      <ItemDetailDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
     </>
   )
 }
 
 export default App
+
