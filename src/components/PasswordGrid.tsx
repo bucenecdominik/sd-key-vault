@@ -11,9 +11,9 @@ interface PasswordGridProps {
 
 export default function PasswordGrid({ passwords }: PasswordGridProps) {
   return (
-    <Grid container spacing={2} p={3} columns={3} sx={{ flexGrow: 1, bgcolor: 'grey.50', overflow: 'auto' }}>
+    <Grid container spacing={2} p={3} columns={{ xs: 3 }} sx={{ flexGrow: 1, bgcolor: 'grey.50', overflow: 'auto' }}>
       {passwords.map((p) => (
-        <Grid item xs={1} key={p.Id}>
+        <Grid size={1} key={p.Id}>
           <Card variant="outlined">
             <CardActionArea>
               <CardContent>
