@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar'
 import SearchBar from './components/SearchBar'
 import PasswordGrid from './components/PasswordGrid'
 import PasswordDetail from './components/PasswordDetail'
-import { Password } from './types'
+import { Password } from '@types'
 
 const passwords: Password[] = [
   {
