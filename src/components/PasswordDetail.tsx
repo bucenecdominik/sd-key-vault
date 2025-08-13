@@ -9,7 +9,8 @@ export default function PasswordDetail() {
       square
       elevation={0}
       sx={{
-        width: 320,
+        width: { xs: 320, md: '35%' },
+        minWidth: 320,
         borderLeft: 1,
         borderColor: 'divider',
         height: '100vh',
