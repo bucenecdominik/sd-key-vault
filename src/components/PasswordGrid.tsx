@@ -3,21 +3,21 @@ import Card from '@mui/material/Card'
 import CardActionArea from '@mui/material/CardActionArea'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
+import type { Password } from '@types'
 
-const passwords = Array.from({ length: 9 }, (_, i) => ({
-  id: i + 1,
-  name: `Heslo ${i + 1}`,
-}))
+interface PasswordGridProps {
+  passwords: Password[]
+}
 
-export default function PasswordGrid() {
+export default function PasswordGrid({ passwords }: PasswordGridProps) {
   return (
     <Grid container spacing={2} p={3} columns={3} sx={{ flexGrow: 1, bgcolor: 'grey.50', overflow: 'auto' }}>
       {passwords.map((p) => (
-        <Grid item xs={1} key={p.id}>
+        <Grid item xs={1} key={p.Id}>
           <Card variant="outlined">
             <CardActionArea>
               <CardContent>
-                <Typography variant="body2">{p.name}</Typography>
+                <Typography variant="body2">{p.Name}</Typography>
               </CardContent>
             </CardActionArea>
           </Card>
