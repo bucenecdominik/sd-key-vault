@@ -6,11 +6,12 @@ import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
+import Switch from '@mui/material/Switch'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+
 
 interface PasswordGeneratorProps {
   open: boolean
@@ -61,19 +62,19 @@ export default function PasswordGenerator({ open, onClose }: PasswordGeneratorPr
             inputProps={{ min: 1 }}
           />
           <FormControlLabel
-            control={<Checkbox checked={useUpper} onChange={(e) => setUseUpper(e.target.checked)} />}
+            control={<Switch checked={useUpper} onChange={(e) => setUseUpper(e.target.checked)} />}
             label="Velká písmena"
           />
           <FormControlLabel
-            control={<Checkbox checked={useLower} onChange={(e) => setUseLower(e.target.checked)} />}
+            control={<Switch checked={useLower} onChange={(e) => setUseLower(e.target.checked)} />}
             label="Malá písmena"
           />
           <FormControlLabel
-            control={<Checkbox checked={useNumbers} onChange={(e) => setUseNumbers(e.target.checked)} />}
+            control={<Switch checked={useNumbers} onChange={(e) => setUseNumbers(e.target.checked)} />}
             label="Číslice"
           />
           <FormControlLabel
-            control={<Checkbox checked={useSymbols} onChange={(e) => setUseSymbols(e.target.checked)} />}
+            control={<Switch checked={useSymbols} onChange={(e) => setUseSymbols(e.target.checked)} />}
             label="Symboly"
           />
           <Box display="flex" alignItems="center" gap={1}>
