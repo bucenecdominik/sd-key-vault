@@ -7,15 +7,18 @@ export const theme = createTheme({
       main: '#2563EB',
     },
     background: {
-      default: '#F7F8FA',
+      default: '#FFFFFF',
       paper: '#FFFFFF',
     },
     text: {
-      primary: '#1D2125',
-      secondary: '#44546F',
+      primary: '#111111',
+      secondary: '#555555',
     },
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 4,
+  },
+  typography: {
+    fontFamily: 'system-ui, sans-serif',
   },
 })

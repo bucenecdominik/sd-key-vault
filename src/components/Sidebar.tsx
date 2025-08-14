@@ -4,7 +4,6 @@ import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import LockIcon from '@mui/icons-material/Lock'
 import FolderIcon from '@mui/icons-material/Folder'
@@ -23,13 +22,11 @@ export default function Sidebar({ folders }: SidebarProps) {
       sx={{
         width: 260,
         bgcolor: 'background.default',
-        borderRight: 1,
-        borderColor: 'divider',
         height: '100vh',
         p: 3,
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
+        gap: 3,
         flexShrink: 0,
       }}
     >
@@ -37,13 +34,14 @@ export default function Sidebar({ folders }: SidebarProps) {
         <LockIcon color="primary" />
         <Typography variant="h6">Klíčenka</Typography>
       </Stack>
-      <Divider />
-      <Typography variant="overline">Složky</Typography>
+      <Typography variant="overline" sx={{ mt: 1 }}>
+        Složky
+      </Typography>
       <List dense>
         {folders.map((folder) => (
           <ListItemButton
             key={folder.Id}
-            sx={{ pl: 1, borderRadius: 1, '&:hover': { bgcolor: 'grey.200' } }}
+            sx={{ pl: 1, borderRadius: 1, '&:hover': { bgcolor: 'action.hover' } }}
           >
             <ListItemIcon sx={{ minWidth: 32 }}>
               <FolderIcon fontSize="small" />
@@ -52,13 +50,14 @@ export default function Sidebar({ folders }: SidebarProps) {
           </ListItemButton>
         ))}
       </List>
-      <Divider />
-      <Typography variant="overline">Štítky</Typography>
+      <Typography variant="overline" sx={{ mt: 2 }}>
+        Štítky
+      </Typography>
       <List dense>
         {tags.map((tag) => (
           <ListItemButton
             key={tag}
-            sx={{ pl: 1, borderRadius: 1, '&:hover': { bgcolor: 'grey.200' } }}
+            sx={{ pl: 1, borderRadius: 1, '&:hover': { bgcolor: 'action.hover' } }}
           >
             <ListItemIcon sx={{ minWidth: 32 }}>
               <LabelIcon fontSize="small" />
