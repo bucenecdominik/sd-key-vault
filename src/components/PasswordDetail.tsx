@@ -2,8 +2,13 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import type { Password } from '@types'
 
-export default function PasswordDetail() {
+interface PasswordDetailProps {
+  password: Password | null
+}
+
+export default function PasswordDetail({ password }: PasswordDetailProps) {
   return (
     <Paper
       square
@@ -23,10 +28,32 @@ export default function PasswordDetail() {
         Detail
       </Typography>
       <Stack spacing={2}>
-        <TextField label="Název" fullWidth />
-        <TextField label="Heslo" type="password" fullWidth />
-        <TextField label="Popis" multiline rows={4} fullWidth />
-        <TextField label="Složka" fullWidth />
+        <TextField
+          label="Název"
+          value={password?.Name ?? ''}
+          fullWidth
+          InputProps={{ readOnly: true }}
+        />
+        <TextField
+          label="Uživatelské jméno"
+          value={password?.UserName ?? ''}
+          fullWidth
+          InputProps={{ readOnly: true }}
+        />
+        <TextField
+          label="Popis"
+          multiline
+          rows={4}
+          value={password?.Description ?? ''}
+          fullWidth
+          InputProps={{ readOnly: true }}
+        />
+        <TextField
+          label="Složka"
+          value={password?.FolderId ?? ''}
+          fullWidth
+          InputProps={{ readOnly: true }}
+        />
       </Stack>
     </Paper>
   )

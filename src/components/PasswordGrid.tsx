@@ -8,9 +8,10 @@ import type { Password } from '@types'
 
 interface PasswordGridProps {
   passwords: Password[]
+  onSelect: (password: Password) => void
 }
 
-export default function PasswordGrid({ passwords }: PasswordGridProps) {
+export default function PasswordGrid({ passwords, onSelect }: PasswordGridProps) {
   return (
     <Paper
       square
@@ -21,6 +22,7 @@ export default function PasswordGrid({ passwords }: PasswordGridProps) {
         {passwords.map((p) => (
           <ListItemButton
             key={p.Id}
+            onClick={() => onSelect(p)}
             sx={{
               py: 1.5,
               borderRadius: 1,
