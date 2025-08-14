@@ -49,7 +49,7 @@ export default function PasswordGenerator({ open, onClose }: PasswordGeneratorPr
   }
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Generátor hesla</DialogTitle>
       <DialogContent sx={{ pt: 2 }}>
         <Stack spacing={2}>

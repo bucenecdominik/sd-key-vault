@@ -34,7 +34,7 @@ const passwords: Password[] = [
 
 export default function HomePage() {
   return (
-    <Box display="flex" height="100vh">
+    <Box display="flex" height="100vh" bgcolor="background.default">
       <Sidebar />
       <Box flexGrow={1} display="flex" flexDirection="column">
         <SearchBar />

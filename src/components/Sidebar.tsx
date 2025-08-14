@@ -18,7 +18,7 @@ export default function Sidebar() {
     <Box
       sx={{
         width: 260,
-        bgcolor: 'grey.100',
+        bgcolor: 'background.default',
         borderRight: 1,
         borderColor: 'divider',
         height: '100vh',
@@ -37,7 +37,10 @@ export default function Sidebar() {
       <Typography variant="overline">Složky</Typography>
       <List dense>
         {folders.map((folder) => (
-          <ListItemButton key={folder} sx={{ pl: 1 }}>
+          <ListItemButton
+            key={folder}
+            sx={{ pl: 1, borderRadius: 1, '&:hover': { bgcolor: 'grey.200' } }}
+          >
             <ListItemIcon sx={{ minWidth: 32 }}>
               <FolderIcon fontSize="small" />
             </ListItemIcon>
@@ -49,7 +52,10 @@ export default function Sidebar() {
       <Typography variant="overline">Štítky</Typography>
       <List dense>
         {tags.map((tag) => (
-          <ListItemButton key={tag} sx={{ pl: 1 }}>
+          <ListItemButton
+            key={tag}
+            sx={{ pl: 1, borderRadius: 1, '&:hover': { bgcolor: 'grey.200' } }}
+          >
             <ListItemIcon sx={{ minWidth: 32 }}>
               <LabelIcon fontSize="small" />
             </ListItemIcon>
