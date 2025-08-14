@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
-import Sidebar from './components/Sidebar'
-import SearchBar from './components/SearchBar'
-import PasswordGrid from './components/PasswordGrid'
-import PasswordDetail from './components/PasswordDetail'
+import Sidebar from '../components/Sidebar'
+import SearchBar from '../components/SearchBar'
+import PasswordGrid from '../components/PasswordGrid'
+import PasswordDetail from '../components/PasswordDetail'
 import type { Password } from '@types'
 
 const passwords: Password[] = [
@@ -32,7 +32,7 @@ const passwords: Password[] = [
   },
 ]
 
-export default function App() {
+export default function HomePage() {
   return (
     <Box display="flex" height="100vh">
       <Sidebar />
