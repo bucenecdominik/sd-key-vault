@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -9,15 +9,7 @@ import ProfilePage from './pages/ProfilePage'
 import FoldersPage from './pages/FoldersPage'
 import AdminUsersPage from './pages/admin/AdminUsersPage'
 import AdminFoldersPage from './pages/admin/AdminFoldersPage'
-
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#1976d2',
-    },
-  },
-})
+import { theme } from './theme'
 
 const router = createBrowserRouter([
   {

@@ -1,8 +1,11 @@
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import CardActionArea from '@mui/material/CardActionArea'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
+import Paper from '@mui/material/Paper'
+import List from '@mui/material/List'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import IconButton from '@mui/material/IconButton'
+import LockIcon from '@mui/icons-material/Lock'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 import type { Password } from '@types'
 
 interface PasswordGridProps {
@@ -11,18 +14,36 @@ interface PasswordGridProps {
 
 export default function PasswordGrid({ passwords }: PasswordGridProps) {
   return (
-    <Grid container spacing={2} p={3} columns={{ xs: 3 }} sx={{ flexGrow: 1, bgcolor: 'grey.50', overflow: 'auto' }}>
-      {passwords.map((p) => (
-        <Grid size={1} key={p.Id}>
-          <Card variant="outlined">
-            <CardActionArea>
-              <CardContent>
-                <Typography variant="body2">{p.Name}</Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
+    <Paper
+      square
+      elevation={0}
+      sx={{ flexGrow: 1, overflow: 'auto', bgcolor: 'background.paper' }}
+    >
+      <List disablePadding>
+        {passwords.map((p) => (
+          <ListItemButton
+            key={p.Id}
+            divider
+            sx={{
+              py: 1.5,
+              borderRadius: 1,
+              '&:hover': { bgcolor: 'grey.100' },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <LockIcon color="action" />
+            </ListItemIcon>
+            <ListItemText
+              primary={p.Name}
+              secondary={p.UserName}
+              primaryTypographyProps={{ fontWeight: 500 }}
+            />
+            <IconButton edge="end" aria-label="more">
+              <MoreVertIcon />
+            </IconButton>
+          </ListItemButton>
+        ))}
+      </List>
+    </Paper>
   )
 }

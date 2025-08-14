@@ -16,6 +16,7 @@ export default function PasswordDetail() {
         height: '100vh',
         p: 3,
         flexShrink: 0,
+        bgcolor: 'background.paper',
       }}
     >
       <Typography variant="h6" gutterBottom>
