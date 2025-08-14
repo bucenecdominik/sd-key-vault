@@ -9,11 +9,15 @@ import Stack from '@mui/material/Stack'
 import LockIcon from '@mui/icons-material/Lock'
 import FolderIcon from '@mui/icons-material/Folder'
 import LabelIcon from '@mui/icons-material/Label'
+import type { Folder } from '@types'
 
-const folders = ['Práce', 'Osobní']
+interface SidebarProps {
+  folders: Folder[]
+}
+
 const tags = ['Web', 'Email']
 
-export default function Sidebar() {
+export default function Sidebar({ folders }: SidebarProps) {
   return (
     <Box
       sx={{
@@ -38,13 +42,13 @@ export default function Sidebar() {
       <List dense>
         {folders.map((folder) => (
           <ListItemButton
-            key={folder}
+            key={folder.Id}
             sx={{ pl: 1, borderRadius: 1, '&:hover': { bgcolor: 'grey.200' } }}
           >
             <ListItemIcon sx={{ minWidth: 32 }}>
               <FolderIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary={folder} />
+            <ListItemText primary={folder.Name} />
           </ListItemButton>
         ))}
       </List>
