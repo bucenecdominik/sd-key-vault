@@ -24,7 +24,8 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@types": ["./src/types.ts"]
+      "@types": ["./src/types.ts"],
+      "@mocks": ["./src/mocks.ts"]
     }
   },
   "include": ["src"]

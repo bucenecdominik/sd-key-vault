@@ -11,6 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@types': path.resolve(__dirname, './src/types.ts'),
+      '@mocks': path.resolve(__dirname, './src/mocks.ts'),
     },
   },
 })
