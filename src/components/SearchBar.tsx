@@ -14,13 +14,11 @@ export default function SearchBar() {
         position="static"
         color="default"
         elevation={0}
-        sx={{ bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}
+        sx={{ bgcolor: 'background.paper' }}
       >
         <Toolbar sx={{ gap: 2 }}>
           <TextField size="small" placeholder="Vyhledat" sx={{ flexGrow: 1 }} />
-          <Button variant="outlined" onClick={() => setOpen(true)}>
-            Generátor
-          </Button>
+          <Button onClick={() => setOpen(true)}>Generátor</Button>
           <Button variant="contained">Nová položka</Button>
         </Toolbar>
       </AppBar>
