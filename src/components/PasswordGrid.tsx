@@ -1,9 +1,8 @@
+import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
-import IconButton from '@mui/material/IconButton'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import LockIcon from '@mui/icons-material/Lock'
 import type { Password } from '@types'
 
 interface PasswordGridProps {
@@ -13,33 +12,31 @@ interface PasswordGridProps {
 
 export default function PasswordGrid({ passwords, onSelect }: PasswordGridProps) {
   return (
-    <Paper
-      square
-      elevation={0}
-      sx={{ flexGrow: 1, overflow: 'auto', bgcolor: 'background.paper' }}
+    <Grid
+      container
+      spacing={2}
+      sx={{ flexGrow: 1, overflow: 'auto', bgcolor: 'background.paper', p: 2 }}
     >
-      <List disablePadding>
-        {passwords.map((p) => (
-          <ListItemButton
-            key={p.Id}
+      {passwords.map((p) => (
+        <Grid item xs={4} key={p.Id}>
+          <Paper
+            variant="outlined"
             onClick={() => onSelect(p)}
-            sx={{
-              py: 1.5,
-              borderRadius: 1,
-              '&:hover': { bgcolor: 'action.hover' },
-            }}
+            sx={{ p: 1.5, cursor: 'pointer' }}
           >
-            <ListItemText
-              primary={p.Name}
-              secondary={p.UserName}
-              primaryTypographyProps={{ fontWeight: 500 }}
-            />
-            <IconButton edge="end" aria-label="more">
-              <MoreVertIcon />
-            </IconButton>
-          </ListItemButton>
-        ))}
-      </List>
-    </Paper>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+              <LockIcon fontSize="small" sx={{ mr: 1 }} />
+              <Typography variant="body1" fontWeight={500}>
+                {p.Name}
+              </Typography>
+            </Box>
+            <Typography variant="caption" color="text.secondary">
+              {new Date(p.UpdatedAt).toLocaleDateString()}
+            </Typography>
+          </Paper>
+        </Grid>
+      ))}
+    </Grid>
   )
 }
+
