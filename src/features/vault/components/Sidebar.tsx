@@ -1,27 +1,45 @@
 import { useMemo } from 'react'
 import { useVaultStore } from '../../../app/store/vault'
-import { selectFilteredItems } from '../selectors'
 
 const folders = [
   { key: 'Work', label: 'Práce' },
   { key: 'Personal', label: 'Osobní' },
 ]
 
-export default function Sidebar() {
-  const filters = useVaultStore((s) => s.filters)
-  const setFolder = useVaultStore((s) => s.setFolder)
-  const filteredItems = useVaultStore(selectFilteredItems)
+const fuzzyMatch = (target: string, query: string): boolean => {
+  const t = target.toLowerCase()
+  const q = query.toLowerCase()
+  let ti = 0
+  let qi = 0
+  while (ti < t.length && qi < q.length) {
+    if (t[ti] === q[qi]) {
+      qi++
+    }
+    ti++
+  }
+  return qi === q.length
+}
 
-  // counts are computed from items after applying current search and filter settings
+export default function Sidebar() {
+  const { items, filters } = useVaultStore((s) => ({ items: s.items, filters: s.filters }))
+  const setFolder = useVaultStore((s) => s.setFolder)
+
+  // counts are computed from items after applying current search text but ignoring folder filter
   const folderCounts = useMemo(() => {
     const counts: Record<string, number> = {}
-    filteredItems.forEach((item) => {
-      if (item.folder) {
+    const query = filters.text.trim()
+    items.forEach((item) => {
+      const textMatch = query
+        ? [item.name, item.username, item.url ?? '', item.notes ?? ''].some((field) =>
+            fuzzyMatch(field, query),
+          )
+        : true
+      if (textMatch && item.folder) {
         counts[item.folder] = (counts[item.folder] ?? 0) + 1
       }
     })
     return counts
-  }, [filteredItems])
+  }, [items, filters.text])
 
   const handleFolderClick = (folder: string) => {
     setFolder(filters.folder === folder ? undefined : folder)
