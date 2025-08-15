@@ -1,10 +1,11 @@
 export interface VaultItem {
   id: string
   name: string
-  username: string
-  password: string
+  username?: string
+  password?: string
   url?: string
-  folder?: string
+  folder?: 'Work' | 'Personal'
+  updatedAt: string // ISO
   notes?: string
-  updatedAt: string
+  icon?: 'globe' | 'server' | 'reddit' | 'bank'
 }

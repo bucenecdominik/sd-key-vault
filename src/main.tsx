@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import HomePage from './pages/HomePage'
+import VaultPage from './pages/VaultPage'
 import ProfilePage from './pages/ProfilePage'
 import FoldersPage from './pages/FoldersPage'
 import AdminUsersPage from './pages/admin/AdminUsersPage'
@@ -14,7 +14,7 @@ import { theme } from './theme'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
+    element: <VaultPage />,
   },
   {
     path: '/profile',

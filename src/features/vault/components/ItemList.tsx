@@ -1,32 +1,39 @@
+import List from '@mui/material/List'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import PublicIcon from '@mui/icons-material/Public'
+import DnsIcon from '@mui/icons-material/Dns'
+import RedditIcon from '@mui/icons-material/Reddit'
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
+import type { ReactElement } from 'react'
 import { useVaultStore } from '../../../app/store/vault'
 import { selectFilteredItems } from '../selectors'
 import { formatRelative } from '../model/time'
+
+const iconMap: Record<string, ReactElement> = {
+  globe: <PublicIcon />,
+  server: <DnsIcon />,
+  reddit: <RedditIcon />,
+  bank: <AccountBalanceIcon />,
+}
 
 export default function ItemList() {
   const items = useVaultStore(selectFilteredItems)
   const selectItem = useVaultStore((s) => s.selectItem)
 
   return (
-    <div className="flex-1 overflow-y-auto p-4">
-      <ul className="space-y-2">
-        {items.map((item) => (
-          <li key={item.id}>
-            <button
-              type="button"
-              onClick={() => selectItem(item.id)}
-              className="flex w-full items-center gap-3 rounded border p-2 hover:bg-gray-100"
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-gray-200">
-                🔐
-              </div>
-              <span className="flex-1 text-left font-medium">{item.name}</span>
-              <span className="text-xs text-gray-500">
-                {formatRelative(item.updatedAt)}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <List sx={{ flex: 1, overflowY: 'auto' }}>
+      {items.map((item) => (
+        <ListItemButton key={item.id} onClick={() => selectItem(item.id)}>
+          <ListItemIcon>{iconMap[item.icon ?? 'globe']}</ListItemIcon>
+          <ListItemText
+            primary={item.name}
+            secondary={formatRelative(item.updatedAt)}
+          />
+        </ListItemButton>
+      ))}
+    </List>
   )
 }
+
