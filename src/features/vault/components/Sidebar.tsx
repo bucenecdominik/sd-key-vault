@@ -1,4 +1,6 @@
+import { useMemo } from 'react'
 import { useVaultStore } from '../../../app/store/vault'
+import { selectFilteredItems } from '../selectors'
 
 const folders = [
   { key: 'Work', label: 'Práce' },
@@ -11,6 +13,22 @@ export default function Sidebar() {
   const filters = useVaultStore((s) => s.filters)
   const setFolder = useVaultStore((s) => s.setFolder)
   const toggleTag = useVaultStore((s) => s.toggleTag)
+  const filteredItems = useVaultStore(selectFilteredItems)
+
+  // counts are computed from items after applying current search and filter settings
+  const { folderCounts, tagCounts } = useMemo(() => {
+    const fc: Record<string, number> = {}
+    const tc: Record<string, number> = {}
+    filteredItems.forEach((item) => {
+      if (item.folder) {
+        fc[item.folder] = (fc[item.folder] ?? 0) + 1
+      }
+      item.tags.forEach((t) => {
+        tc[t] = (tc[t] ?? 0) + 1
+      })
+    })
+    return { folderCounts: fc, tagCounts: tc }
+  }, [filteredItems])
 
   const handleFolderClick = (folder: string) => {
     setFolder(filters.folder === folder ? undefined : folder)
@@ -26,13 +44,16 @@ export default function Sidebar() {
               <button
                 type="button"
                 onClick={() => handleFolderClick(f.key)}
-                className={`w-full rounded px-2 py-1 text-left ${
+                className={`flex w-full items-center justify-between rounded px-2 py-1 text-left ${
                   filters.folder === f.key
                     ? 'bg-blue-500 text-white'
                     : 'text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                {f.label}
+                <span>{f.label}</span>
+                <span className="rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-700">
+                  {folderCounts[f.key] ?? 0}
+                </span>
               </button>
             </li>
           ))}
@@ -47,13 +68,16 @@ export default function Sidebar() {
               <button
                 type="button"
                 onClick={() => toggleTag(tag)}
-                className={`w-full rounded px-2 py-1 text-left ${
+                className={`flex w-full items-center justify-between rounded px-2 py-1 text-left ${
                   filters.tags.includes(tag)
                     ? 'bg-blue-500 text-white'
                     : 'text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                {tag}
+                <span>{tag}</span>
+                <span className="rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-700">
+                  {tagCounts[tag] ?? 0}
+                </span>
               </button>
             </li>
           ))}
