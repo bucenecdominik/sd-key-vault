@@ -7,14 +7,11 @@ import ListItemText from '@mui/material/ListItemText'
 import Stack from '@mui/material/Stack'
 import LockIcon from '@mui/icons-material/Lock'
 import FolderIcon from '@mui/icons-material/Folder'
-import LabelIcon from '@mui/icons-material/Label'
 import type { Folder } from '@types'
 
 interface SidebarProps {
   folders: Folder[]
 }
-
-const tags = ['Web', 'Email']
 
 export default function Sidebar({ folders }: SidebarProps) {
   return (
@@ -47,22 +44,6 @@ export default function Sidebar({ folders }: SidebarProps) {
               <FolderIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary={folder.Name} />
-          </ListItemButton>
-        ))}
-      </List>
-      <Typography variant="overline" sx={{ mt: 2 }}>
-        Štítky
-      </Typography>
-      <List dense>
-        {tags.map((tag) => (
-          <ListItemButton
-            key={tag}
-            sx={{ pl: 1, borderRadius: 1, '&:hover': { bgcolor: 'action.hover' } }}
-          >
-            <ListItemIcon sx={{ minWidth: 32 }}>
-              <LabelIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary={tag} />
           </ListItemButton>
         ))}
       </List>
