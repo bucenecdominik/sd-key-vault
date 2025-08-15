@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useVaultStore } from '../../../app/store/vault'
 import { formatRelative } from '../model/time'
 import { useToast } from '../../../components/Toast'
+import { useGeneratorDialog } from './password/GeneratorDialog'
 
 const folders = [
   { key: 'Work', label: 'Práce' },
@@ -18,6 +19,7 @@ export default function DetailPanel() {
   const showToast = useToast((s) => s.show)
   const [showPassword, setShowPassword] = useState(false)
   const [tagInput, setTagInput] = useState('')
+  const openGenerator = useGeneratorDialog((s) => s.show)
 
   if (!item) {
     return <div className="p-4 text-gray-500">Vyber položku</div>
@@ -128,6 +130,13 @@ export default function DetailPanel() {
               className="rounded border px-2 py-1 text-sm text-blue-600 hover:bg-gray-100"
             >
               Kopírovat
+            </button>
+            <button
+              type="button"
+              onClick={openGenerator}
+              className="rounded border px-2 py-1 text-sm text-blue-600 hover:bg-gray-100"
+            >
+              Generátor
             </button>
           </div>
         </div>

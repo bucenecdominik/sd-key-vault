@@ -3,6 +3,7 @@ import Topbar from '../features/vault/components/Topbar'
 import ItemList from '../features/vault/components/ItemList'
 import DetailPanel from '../features/vault/components/DetailPanel'
 import Toast from '../components/Toast'
+import GeneratorDialog from '../features/vault/components/password/GeneratorDialog'
 
 export default function VaultPage() {
   return (
@@ -16,6 +17,7 @@ export default function VaultPage() {
         <DetailPanel />
       </div>
       <Toast />
+      <GeneratorDialog />
     </>
   )
 }
