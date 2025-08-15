@@ -1,5 +1,5 @@
-export function formatRelativeTime(date: string | number | Date): string {
-  const target = new Date(date)
+export function formatRelative(iso: string): string {
+  const target = new Date(iso)
   const diff = Date.now() - target.getTime()
   const minutes = Math.floor(diff / 60000)
   if (minutes < 60) {

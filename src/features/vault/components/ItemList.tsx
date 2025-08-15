@@ -1,6 +1,6 @@
 import { useVaultStore } from '../../../app/store/vault'
 import { selectFilteredItems } from '../selectors'
-import { formatRelativeTime } from '../utils/time'
+import { formatRelative } from '../model/time'
 
 export default function ItemList() {
   const items = useVaultStore(selectFilteredItems)
@@ -23,7 +23,7 @@ export default function ItemList() {
                 <div>
                   <div className="font-medium">{item.name}</div>
                   <div className="text-xs text-gray-500">
-                    {formatRelativeTime(item.updatedAt)}
+                    {formatRelative(item.updatedAt)}
                   </div>
                 </div>
               </div>
