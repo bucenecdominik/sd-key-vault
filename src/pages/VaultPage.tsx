@@ -1,37 +1,40 @@
-import { useEffect, useRef } from 'react'
-import Box from '@mui/material/Box'
-import Sidebar from '../features/vault/components/Sidebar'
-import Topbar from '../features/vault/components/Topbar'
-import ItemList from '../features/vault/components/ItemList'
-import DetailPanel from '../features/vault/components/DetailPanel'
-import Toast from '../components/Toast'
-import GeneratorDialog from '../features/vault/components/password/GeneratorDialog'
-import { mockVaultItems } from '../mocks'
-import { useVaultStore } from '../app/store/vault'
+
+import { useEffect, useRef } from 'react';
+import { Box, Toolbar } from '@mui/material';
+
+import Sidebar from '../features/vault/components/Sidebar';
+import Topbar from '../features/vault/components/Topbar';
+import ItemList from '../features/vault/components/ItemList';
+import DetailPanel from '../features/vault/components/DetailPanel';
+import ToastHost from '../features/vault/components/ToastHost';
+
+import { useVaultStore } from '../app/store/vault';
+import { mockVaultItems } from '../mocks';
 
 export default function VaultPage() {
-  const init = useVaultStore((s) => s.init)
-
-  const initialized = useRef(false)
+  const init = useVaultStore((s) => s.init);
+  const inited = useRef(false);
 
   useEffect(() => {
-    if (initialized.current) return
-    init(mockVaultItems)
-    initialized.current = true
-  }, [init])
+    if (inited.current) return;
+    inited.current = true; // StrictMode guard
+    init(mockVaultItems);
+  }, [init]);
 
   return (
-    <>
-      <Box display="flex" height="100vh">
-        <Sidebar />
-        <Box flex={1} display="flex" flexDirection="column">
-          <Topbar />
+    <Box sx={{ display: 'grid', gridTemplateColumns: '240px 1fr 380px', minHeight: '100vh' }}>
+      <Sidebar />
+      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <Topbar />
+        <Toolbar />
+        <Box sx={{ p: 1, overflow: 'auto' }}>
           <ItemList />
         </Box>
+      </Box>
+      <Box sx={{ borderLeft: 1, borderColor: 'divider', minWidth: 0 }}>
         <DetailPanel />
       </Box>
-      <Toast />
-      <GeneratorDialog />
-    </>
-  )
+      <ToastHost />
+    </Box>
+  );
 }

@@ -9,7 +9,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import { useVaultStore } from '../../../../app/store/vault'
-import { useToast } from '../../../../components/Toast'
+import { useToast } from '../../../../app/store/toast'
 
 interface GeneratorState {
   open: boolean
@@ -27,7 +27,7 @@ export default function GeneratorDialog() {
   const { open, hide } = useGeneratorDialog()
   const selectedId = useVaultStore((s) => s.selectedId)
   const updateItemPartial = useVaultStore((s) => s.updateItemPartial)
-  const showToast = useToast((s) => s.show)
+  const showToast = useToast()
 
   const [length, setLength] = useState(16)
   const [numbers, setNumbers] = useState(true)
@@ -51,7 +51,7 @@ export default function GeneratorDialog() {
   const copy = async () => {
     if (!password) return
     await navigator.clipboard.writeText(password)
-    showToast('Zkopírováno')
+    showToast({ message: 'Zkopírováno' })
   }
 
   const apply = () => {

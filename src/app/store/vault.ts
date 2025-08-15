@@ -1,42 +1,43 @@
-import { create } from 'zustand'
-import type { VaultItem } from 'src/types/vault'
+import { create } from 'zustand';
+import type { VaultItem, VaultFolder } from '../../types/vault';
 
 export interface VaultFilters {
-  text: string
-  folder?: string
+  text: string;
+  folder?: VaultFolder;
 }
 
-export interface VaultState {
-  items: VaultItem[]
-  filters: VaultFilters
-  selectedId?: string
-  init: (items: VaultItem[]) => void
-  setFilterText: (text: string) => void
-  setFolder: (folder?: string) => void
-  selectItem: (id?: string) => void
-  updateItemPartial: (id: string, partial: Partial<VaultItem>) => void
-  clearFilters: () => void
+interface VaultState {
+  items: VaultItem[];
+  selectedId?: string;
+  filters: VaultFilters;
+  // actions
+  init: (items: VaultItem[]) => void;
+  setFilterText: (text: string) => void;
+  setFolder: (folder?: VaultFolder) => void;
+  clearFilters: () => void;
+  selectItem: (id?: string) => void;
+  updateItemPartial: (id: string, patch: Partial<VaultItem>) => void;
 }
 
-export const useVaultStore = create<VaultState>((set) => ({
+export const useVaultStore = create<VaultState>((set, get) => ({
   items: [],
-  filters: {
-    text: '',
-    folder: undefined,
-  },
   selectedId: undefined,
+  filters: { text: '' },
+
   init: (items) => set({ items }),
+
   setFilterText: (text) =>
-    set((state) => ({ filters: { ...state.filters, text } })),
+    set((s) => (s.filters.text === text ? s : { filters: { ...s.filters, text } })),
+
   setFolder: (folder) =>
-    set((state) => ({ filters: { ...state.filters, folder } })),
-  selectItem: (id) => set({ selectedId: id }),
-  updateItemPartial: (id, partial) =>
-    set((state) => ({
-      items: state.items.map((item) =>
-        item.id === id ? { ...item, ...partial } : item
-      ),
+    set((s) => (s.filters.folder === folder ? s : { filters: { ...s.filters, folder } })),
+
+  clearFilters: () => set({ filters: { text: '', folder: undefined } }),
+
+  selectItem: (id) => set((s) => (s.selectedId === id ? s : { selectedId: id })),
+
+  updateItemPartial: (id, patch) =>
+    set((s) => ({
+      items: s.items.map((it) => (it.id === id ? { ...it, ...patch } : it)),
     })),
-  clearFilters: () =>
-    set({ filters: { text: '', folder: undefined } }),
-}))
+}));

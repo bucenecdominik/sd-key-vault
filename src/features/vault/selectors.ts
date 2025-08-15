@@ -1,35 +1,24 @@
-import type { VaultState } from '../../app/store/vault'
+import type { VaultItem } from '../../types/vault';
+import type { VaultFilters } from '../../app/store/vault';
 
-const fuzzyMatch = (target: string, query: string): boolean => {
-  const t = target.toLowerCase()
-  const q = query.toLowerCase()
-  let ti = 0
-  let qi = 0
-  while (ti < t.length && qi < q.length) {
-    if (t[ti] === q[qi]) {
-      qi++
-    }
-    ti++
-  }
-  return qi === q.length
-}
+const norm = (s: string) =>
+  (s || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
 
-export const selectFilteredItems = (state: VaultState) => {
-  const {
-    items,
-    filters: { text, folder },
-  } = state
+const matchesText = (it: VaultItem, text: string) => {
+  if (!text) return true;
+  const q = norm(text);
+  return (
+    norm(it.name).includes(q) ||
+    norm(it.username ?? '').includes(q) ||
+    norm(it.url ?? '').includes(q) ||
+    norm(it.notes ?? '').includes(q)
+  );
+};
 
-  const query = text.trim()
-
-  return items.filter((item) => {
-    const textMatch = query
-      ? [item.name, item.username ?? '', item.url ?? '', item.notes ?? ''].some(
-          (field) => fuzzyMatch(field, query),
-        )
-      : true
-    const folderMatch = folder ? item.folder === folder : true
-    return textMatch && folderMatch
-  })
-}
-
+export const filterItems = (items: VaultItem[], filters: VaultFilters) => {
+  return items.filter((it) => {
+    if (!matchesText(it, filters.text)) return false;
+    if (filters.folder && it.folder !== filters.folder) return false;
+    return true;
+  });
+};

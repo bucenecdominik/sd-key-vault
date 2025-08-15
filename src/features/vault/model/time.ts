@@ -1,14 +1,12 @@
 export function formatRelative(iso: string): string {
-  const target = new Date(iso)
-  const diff = Date.now() - target.getTime()
-  const minutes = Math.floor(diff / 60000)
-  if (minutes < 60) {
-    return `před ${minutes} min`
-  }
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) {
-    return `před ${hours} h`
-  }
-  const days = Math.floor(hours / 24)
-  return `před ${days} d`
+  const then = new Date(iso).getTime();
+  const now = Date.now();
+  const diffMs = Math.max(0, now - then);
+  const min = Math.floor(diffMs / 60000);
+  if (min < 1) return 'před chvílí';
+  if (min < 60) return `před ${min} min`;
+  const h = Math.floor(min / 60);
+  if (h < 24) return `před ${h} h`;
+  const d = Math.floor(h / 24);
+  return `před ${d} d`;
 }

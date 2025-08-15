@@ -1,166 +1,119 @@
-import { useState } from 'react'
-import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
-import MenuItem from '@mui/material/MenuItem'
-import Typography from '@mui/material/Typography'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-import { useVaultStore } from '../../../app/store/vault'
-import { formatRelative } from '../model/time'
-import { useToast } from '../../../components/Toast'
-import { useGeneratorDialog } from './password/GeneratorDialog'
+import * as React from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  TextField,
+  IconButton,
+  InputAdornment,
+  Button,
+  MenuItem,
+  Typography,
+} from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import ContentCopy from '@mui/icons-material/ContentCopy';
 
-const folders = [
-  { key: 'Work', label: 'Práce' },
-  { key: 'Personal', label: 'Osobní' },
-]
+import { useVaultStore } from '../../../app/store/vault';
+import { useToast } from '../../../app/store/toast';
+
+type Folder = 'Work' | 'Personal';
 
 export default function DetailPanel() {
-  const items = useVaultStore((s) => s.items)
-  const selectedId = useVaultStore((s) => s.selectedId)
-  const updateItemPartial = useVaultStore((s) => s.updateItemPartial)
-  const item = items.find((i) => i.id === selectedId)
-  const showToast = useToast((s) => s.show)
-  const [showPassword, setShowPassword] = useState(false)
-  const openGenerator = useGeneratorDialog((s) => s.show)
+  const selectedId = useVaultStore((s) => s.selectedId);
+  const item = useVaultStore((s) => s.items.find((i) => i.id === s.selectedId));
+  const update = useVaultStore((s) => s.updateItemPartial);
+  const toast = useToast();
 
-  if (!item) {
+  const [showPass, setShowPass] = React.useState(false);
+
+  if (!selectedId || !item) {
     return (
-      <Box p={4} color="text.secondary">
-        Vyber položku
-      </Box>
-    )
+      <Box sx={{ p: 2, color: 'text.secondary' }}>Vyber položku ze seznamu.</Box>
+    );
   }
 
-  const handleCopy = async (text: string) => {
-    await navigator.clipboard.writeText(text)
-    showToast('Zkopírováno')
-  }
-
-  const folderOptions = [...folders]
-  if (item.folder && !folderOptions.find((f) => f.key === item.folder)) {
-    folderOptions.push({ key: item.folder, label: item.folder })
-  }
+  const copy = async (val?: string) => {
+    if (!val) return;
+    await navigator.clipboard.writeText(val);
+    toast({ message: 'Zkopírováno', severity: 'success' });
+  };
 
   return (
-    <Paper
-      square
-      sx={{ width: 360, display: 'flex', flexDirection: 'column', borderLeft: 1, borderColor: 'divider' }}
-    >
-      <Box p={2}>
+    <Card variant="outlined" sx={{ m: 2 }}>
+      <CardContent sx={{ display: 'grid', gap: 2 }}>
         <Typography variant="h6">{item.name}</Typography>
-        <Typography variant="caption" color="text.secondary">
-          {formatRelative(item.updatedAt)}
-        </Typography>
-      </Box>
-      <Box flex={1} p={2} display="flex" flexDirection="column" gap={2} overflow="auto">
         <TextField
           label="Název"
           value={item.name}
-          onChange={(e) => updateItemPartial(item.id, { name: e.target.value })}
-          fullWidth
+          onChange={(e) => update(item.id, { name: e.target.value })}
         />
-        <Box display="flex" gap={1}>
-          <TextField
-            label="URL"
-            value={item.url ?? ''}
-            onChange={(e) => updateItemPartial(item.id, { url: e.target.value })}
-            fullWidth
-          />
-          <Button
-            variant="outlined"
-            onClick={() => item.url && window.open(item.url, '_blank', 'noopener')}
-            disabled={!item.url}
-            startIcon={<OpenInNewIcon />}
-          >
-            Otevřít
-          </Button>
-        </Box>
         <TextField
-          label="Uživatel"
-          value={item.username ?? ''}
-          onChange={(e) => updateItemPartial(item.id, { username: e.target.value })}
-          fullWidth
+          label="URL"
+          value={item.url ?? ''}
+          onChange={(e) => update(item.id, { url: e.target.value })}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  aria-label="Kopírovat uživatele"
-                  onClick={() => handleCopy(item.username ?? '')}
-                  edge="end"
+                <Button
+                  onClick={() => item.url && window.open(item.url, '_blank', 'noopener')}
                 >
-                  <ContentCopyIcon fontSize="small" />
+                  Otevřít
+                </Button>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          label="Uživatel"
+          value={item.username ?? ''}
+          onChange={(e) => update(item.id, { username: e.target.value })}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => copy(item.username)} aria-label="Kopírovat uživatele">
+                  <ContentCopy />
                 </IconButton>
               </InputAdornment>
             ),
           }}
         />
-        <Box display="flex" gap={1} alignItems="flex-end">
-          <TextField
-            label="Heslo"
-            type={showPassword ? 'text' : 'password'}
-            value={item.password ?? ''}
-            onChange={(e) => updateItemPartial(item.id, { password: e.target.value })}
-            fullWidth
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label={showPassword ? 'Schovat heslo' : 'Zobrazit heslo'}
-                    onClick={() => setShowPassword((s) => !s)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
-                  <IconButton
-                    aria-label="Kopírovat heslo"
-                    onClick={() => handleCopy(item.password ?? '')}
-                    edge="end"
-                  >
-                    <ContentCopyIcon fontSize="small" />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button variant="outlined" onClick={openGenerator}>
-            Generátor
-          </Button>
-        </Box>
+        <TextField
+          label="Heslo"
+          type={showPass ? 'text' : 'password'}
+          value={item.password ?? ''}
+          onChange={(e) => update(item.id, { password: e.target.value })}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowPass((v) => !v)} aria-label="Zobrazit/skrýt heslo">
+                  {showPass ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+                <IconButton onClick={() => copy(item.password)} aria-label="Kopírovat heslo">
+                  <ContentCopy />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
         <TextField
           select
           label="Složka"
           value={item.folder ?? ''}
-          onChange={(e) =>
-            updateItemPartial(item.id, {
-              folder: e.target.value === '' ? undefined : (e.target.value as 'Work' | 'Personal'),
-            })
-          }
-          fullWidth
+          onChange={(e) => update(item.id, { folder: (e.target.value as Folder) || undefined })}
         >
           <MenuItem value="">(Žádná)</MenuItem>
-          {folderOptions.map((f) => (
-            <MenuItem key={f.key} value={f.key}>
-              {f.label}
-            </MenuItem>
-          ))}
+          <MenuItem value="Work">Práce</MenuItem>
+          <MenuItem value="Personal">Osobní</MenuItem>
         </TextField>
         <TextField
           label="Poznámky"
-          multiline
-          rows={4}
           value={item.notes ?? ''}
-          onChange={(e) => updateItemPartial(item.id, { notes: e.target.value })}
-          fullWidth
+          onChange={(e) => update(item.id, { notes: e.target.value })}
+          multiline
+          minRows={3}
         />
-      </Box>
-    </Paper>
-  )
+      </CardContent>
+    </Card>
+  );
 }
-
