@@ -38,6 +38,16 @@ const makeState = (text: string, folder?: string): VaultState => ({
 })
 
 describe('selectFilteredItems', () => {
+  it('filters by text', () => {
+    const state = makeState('bank')
+    expect(selectFilteredItems(state)).toEqual([items[1]])
+  })
+
+  it('filters by folder', () => {
+    const state = makeState('', 'Work')
+    expect(selectFilteredItems(state)).toEqual([items[0]])
+  })
+
   it('filters by text and folder', () => {
     const state = makeState('bank', 'Personal')
     expect(selectFilteredItems(state)).toEqual([items[1]])

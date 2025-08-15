@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
 import { create } from 'zustand'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
 interface ToastState {
   message: string | null
@@ -15,18 +16,16 @@ export const useToast = create<ToastState>((set) => ({
 
 export default function Toast() {
   const { message, clear } = useToast()
-
-  useEffect(() => {
-    if (!message) return
-    const t = setTimeout(clear, 2000)
-    return () => clearTimeout(t)
-  }, [message, clear])
-
-  if (!message) return null
+  const open = Boolean(message)
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 rounded bg-black px-4 py-2 text-sm text-white shadow">
-      {message}
-    </div>
+    <Snackbar open={open} autoHideDuration={2000} onClose={(_, reason) => {
+      if (reason === 'clickaway') return
+      clear()
+    }}>
+      <Alert onClose={clear} severity="info" variant="filled" sx={{ width: '100%' }}>
+        {message}
+      </Alert>
+    </Snackbar>
   )
 }

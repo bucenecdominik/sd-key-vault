@@ -24,7 +24,7 @@ export const selectFilteredItems = (state: VaultState) => {
 
   return items.filter((item) => {
     const textMatch = query
-      ? [item.name, item.username, item.url ?? '', item.notes ?? ''].some(
+      ? [item.name, item.username ?? '', item.url ?? '', item.notes ?? ''].some(
           (field) => fuzzyMatch(field, query),
         )
       : true

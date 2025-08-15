@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import Box from '@mui/material/Box'
 import Sidebar from '../features/vault/components/Sidebar'
 import Topbar from '../features/vault/components/Topbar'
 import ItemList from '../features/vault/components/ItemList'
@@ -17,14 +18,14 @@ export default function VaultPage() {
 
   return (
     <>
-      <div className="grid h-screen grid-cols-[240px_1fr_360px]">
+      <Box display="flex" height="100vh">
         <Sidebar />
-        <div className="flex flex-col">
+        <Box flex={1} display="flex" flexDirection="column">
           <Topbar />
           <ItemList />
-        </div>
+        </Box>
         <DetailPanel />
-      </div>
+      </Box>
       <Toast />
       <GeneratorDialog />
     </>

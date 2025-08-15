@@ -1,4 +1,16 @@
 import { useState } from 'react'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { useVaultStore } from '../../../app/store/vault'
 import { formatRelative } from '../model/time'
 import { useToast } from '../../../components/Toast'
@@ -10,18 +22,20 @@ const folders = [
 ]
 
 export default function DetailPanel() {
-  const { items, selectedId, updateItemPartial } = useVaultStore((s) => ({
-    items: s.items,
-    selectedId: s.selectedId,
-    updateItemPartial: s.updateItemPartial,
-  }))
+  const items = useVaultStore((s) => s.items)
+  const selectedId = useVaultStore((s) => s.selectedId)
+  const updateItemPartial = useVaultStore((s) => s.updateItemPartial)
   const item = items.find((i) => i.id === selectedId)
   const showToast = useToast((s) => s.show)
   const [showPassword, setShowPassword] = useState(false)
   const openGenerator = useGeneratorDialog((s) => s.show)
 
   if (!item) {
-    return <div className="p-4 text-gray-500">Vyber položku</div>
+    return (
+      <Box p={4} color="text.secondary">
+        Vyber položku
+      </Box>
+    )
   }
 
   const handleCopy = async (text: string) => {
@@ -35,124 +49,118 @@ export default function DetailPanel() {
   }
 
   return (
-    <div className="flex h-full flex-col border-l">
-      <div className="p-4">
-        <h2 className="font-semibold">{item.name}</h2>
-        <div className="text-xs text-gray-500">{formatRelative(item.updatedAt)}</div>
-      </div>
-      <div className="flex-1 space-y-4 overflow-y-auto p-4">
-        <div>
-          <label className="mb-1 block text-sm font-medium">Název</label>
-          <input
-            type="text"
-            value={item.name}
-            onChange={(e) => updateItemPartial(item.id, { name: e.target.value })}
-            className="w-full rounded border px-2 py-1"
+    <Paper
+      square
+      sx={{ width: 360, display: 'flex', flexDirection: 'column', borderLeft: 1, borderColor: 'divider' }}
+    >
+      <Box p={2}>
+        <Typography variant="h6">{item.name}</Typography>
+        <Typography variant="caption" color="text.secondary">
+          {formatRelative(item.updatedAt)}
+        </Typography>
+      </Box>
+      <Box flex={1} p={2} display="flex" flexDirection="column" gap={2} overflow="auto">
+        <TextField
+          label="Název"
+          value={item.name}
+          onChange={(e) => updateItemPartial(item.id, { name: e.target.value })}
+          fullWidth
+        />
+        <Box display="flex" gap={1}>
+          <TextField
+            label="URL"
+            value={item.url ?? ''}
+            onChange={(e) => updateItemPartial(item.id, { url: e.target.value })}
+            fullWidth
           />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium">URL</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={item.url ?? ''}
-              onChange={(e) => updateItemPartial(item.id, { url: e.target.value })}
-              className="flex-1 rounded border px-2 py-1"
-            />
-            <button
-              type="button"
-              onClick={() => item.url && window.open(item.url, '_blank', 'noopener')}
-              disabled={!item.url}
-              className="rounded border px-2 py-1 text-sm text-blue-600 hover:bg-gray-100 disabled:opacity-50"
-            >
-              Otevřít
-            </button>
-          </div>
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium">Uživatel</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={item.username}
-              onChange={(e) =>
-                updateItemPartial(item.id, { username: e.target.value })
-              }
-              className="flex-1 rounded border px-2 py-1"
-            />
-            <button
-              type="button"
-              onClick={() => handleCopy(item.username)}
-              className="rounded border px-2 py-1 text-sm text-blue-600 hover:bg-gray-100"
-            >
-              Kopírovat
-            </button>
-          </div>
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium">Heslo</label>
-          <div className="flex gap-2">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              value={item.password}
-              onChange={(e) =>
-                updateItemPartial(item.id, { password: e.target.value })
-              }
-              className="flex-1 rounded border px-2 py-1"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((s) => !s)}
-              className="rounded border px-2 py-1 text-sm text-blue-600 hover:bg-gray-100"
-            >
-              {showPassword ? 'Schovat' : 'Zobrazit'}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleCopy(item.password)}
-              className="rounded border px-2 py-1 text-sm text-blue-600 hover:bg-gray-100"
-            >
-              Kopírovat
-            </button>
-            <button
-              type="button"
-              onClick={openGenerator}
-              className="rounded border px-2 py-1 text-sm text-blue-600 hover:bg-gray-100"
-            >
-              Generátor
-            </button>
-          </div>
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium">Složka</label>
-          <select
-            value={item.folder ?? ''}
-            onChange={(e) =>
-              updateItemPartial(item.id, {
-                folder: e.target.value === '' ? undefined : e.target.value,
-              })
-            }
-            className="w-full rounded border px-2 py-1"
+          <Button
+            variant="outlined"
+            onClick={() => item.url && window.open(item.url, '_blank', 'noopener')}
+            disabled={!item.url}
+            startIcon={<OpenInNewIcon />}
           >
-            <option value="">(Žádná)</option>
-            {folderOptions.map((f) => (
-              <option key={f.key} value={f.key}>
-                {f.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium">Poznámky</label>
-          <textarea
-            value={item.notes ?? ''}
-            onChange={(e) =>
-              updateItemPartial(item.id, { notes: e.target.value })
-            }
-            className="h-24 w-full rounded border px-2 py-1"
+            Otevřít
+          </Button>
+        </Box>
+        <TextField
+          label="Uživatel"
+          value={item.username ?? ''}
+          onChange={(e) => updateItemPartial(item.id, { username: e.target.value })}
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="Kopírovat uživatele"
+                  onClick={() => handleCopy(item.username ?? '')}
+                  edge="end"
+                >
+                  <ContentCopyIcon fontSize="small" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Box display="flex" gap={1} alignItems="flex-end">
+          <TextField
+            label="Heslo"
+            type={showPassword ? 'text' : 'password'}
+            value={item.password ?? ''}
+            onChange={(e) => updateItemPartial(item.id, { password: e.target.value })}
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={showPassword ? 'Schovat heslo' : 'Zobrazit heslo'}
+                    onClick={() => setShowPassword((s) => !s)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                  <IconButton
+                    aria-label="Kopírovat heslo"
+                    onClick={() => handleCopy(item.password ?? '')}
+                    edge="end"
+                  >
+                    <ContentCopyIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
-        </div>
-      </div>
-    </div>
+          <Button variant="outlined" onClick={openGenerator}>
+            Generátor
+          </Button>
+        </Box>
+        <TextField
+          select
+          label="Složka"
+          value={item.folder ?? ''}
+          onChange={(e) =>
+            updateItemPartial(item.id, {
+              folder: e.target.value === '' ? undefined : (e.target.value as 'Work' | 'Personal'),
+            })
+          }
+          fullWidth
+        >
+          <MenuItem value="">(Žádná)</MenuItem>
+          {folderOptions.map((f) => (
+            <MenuItem key={f.key} value={f.key}>
+              {f.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          label="Poznámky"
+          multiline
+          rows={4}
+          value={item.notes ?? ''}
+          onChange={(e) => updateItemPartial(item.id, { notes: e.target.value })}
+          fullWidth
+        />
+      </Box>
+    </Paper>
   )
 }
+

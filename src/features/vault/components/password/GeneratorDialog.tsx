@@ -1,5 +1,13 @@
 import { useState } from 'react'
 import { create } from 'zustand'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import TextField from '@mui/material/TextField'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import Button from '@mui/material/Button'
 import { useVaultStore } from '../../../../app/store/vault'
 import { useToast } from '../../../../components/Toast'
 
@@ -54,87 +62,38 @@ export default function GeneratorDialog() {
     hide()
   }
 
-  if (!open) return null
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-      <div className="w-80 rounded bg-white p-4 shadow">
-        <h2 className="mb-4 text-lg font-semibold">Generátor hesla</h2>
-        <div className="mb-2">
-          <label className="mb-1 block text-sm font-medium">Délka: {length}</label>
-          <input
-            type="range"
-            min={8}
-            max={64}
-            value={length}
-            onChange={(e) => setLength(Number(e.target.value))}
-            className="w-full"
-          />
-        </div>
-        <div className="mb-2 flex items-center gap-2">
-          <input
-            id="numbers"
-            type="checkbox"
-            checked={numbers}
-            onChange={(e) => setNumbers(e.target.checked)}
-          />
-          <label htmlFor="numbers" className="text-sm">
-            Čísla
-          </label>
-        </div>
-        <div className="mb-4 flex items-center gap-2">
-          <input
-            id="symbols"
-            type="checkbox"
-            checked={symbols}
-            onChange={(e) => setSymbols(e.target.checked)}
-          />
-          <label htmlFor="symbols" className="text-sm">
-            Symboly
-          </label>
-        </div>
-        <div className="mb-4">
-          <input
-            type="text"
-            readOnly
-            value={password}
-            className="w-full rounded border px-2 py-1"
-          />
-        </div>
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={generate}
-            className="rounded border px-3 py-1 text-sm text-blue-600 hover:bg-gray-100"
-          >
-            Vygenerovat
-          </button>
-          <button
-            type="button"
-            onClick={copy}
-            disabled={!password}
-            className="rounded border px-3 py-1 text-sm text-blue-600 hover:bg-gray-100 disabled:opacity-50"
-          >
-            Kopírovat
-          </button>
-          <button
-            type="button"
-            onClick={apply}
-            disabled={!password || !selectedId}
-            className="rounded border px-3 py-1 text-sm text-blue-600 hover:bg-gray-100 disabled:opacity-50"
-          >
-            Použít
-          </button>
-          <button
-            type="button"
-            onClick={hide}
-            className="rounded border px-3 py-1 text-sm text-gray-600 hover:bg-gray-100"
-          >
-            Zavřít
-          </button>
-        </div>
-      </div>
-    </div>
+    <Dialog open={open} onClose={hide}>
+      <DialogTitle>Generátor hesla</DialogTitle>
+      <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+        <TextField
+          label={`Délka: ${length}`}
+          type="range"
+          value={length}
+          onChange={(e) => setLength(Number(e.target.value))}
+          inputProps={{ min: 8, max: 64 }}
+        />
+        <FormControlLabel
+          control={<Checkbox checked={numbers} onChange={(e) => setNumbers(e.target.checked)} />}
+          label="Čísla"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={symbols} onChange={(e) => setSymbols(e.target.checked)} />}
+          label="Symboly"
+        />
+        <TextField label="Heslo" value={password} InputProps={{ readOnly: true }} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={generate}>Vygenerovat</Button>
+        <Button onClick={copy} disabled={!password}>
+          Kopírovat
+        </Button>
+        <Button onClick={apply} disabled={!password || !selectedId}>
+          Použít
+        </Button>
+        <Button onClick={hide}>Zavřít</Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 

@@ -1,30 +1,38 @@
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import SearchIcon from '@mui/icons-material/Search'
+import Button from '@mui/material/Button'
 import { useVaultStore } from '../../../app/store/vault'
 import { useGeneratorDialog } from './password/GeneratorDialog'
 
 export default function Topbar() {
   const text = useVaultStore((s) => s.filters.text)
   const setFilterText = useVaultStore((s) => s.setFilterText)
-
   const openGenerator = useGeneratorDialog((s) => s.show)
 
   return (
-    <div className="border-b p-4">
-      <div className="flex gap-2">
-        <input
-          type="text"
+    <AppBar position="static" color="default" elevation={0}>
+      <Toolbar sx={{ gap: 2 }}>
+        <TextField
+          size="small"
           placeholder="Hledat v trezoru…"
           value={text}
           onChange={(e) => setFilterText(e.target.value)}
-          className="flex-1 rounded border px-3 py-2"
+          sx={{ flexGrow: 1 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+          }}
         />
-        <button
-          type="button"
-          onClick={openGenerator}
-          className="rounded border px-3 py-2 text-sm text-blue-600 hover:bg-gray-100"
-        >
-          Generátor
-        </button>
-      </div>
-    </div>
+        <Button onClick={openGenerator}>Generátor</Button>
+        <Button variant="contained">Nová</Button>
+      </Toolbar>
+    </AppBar>
   )
 }
+
