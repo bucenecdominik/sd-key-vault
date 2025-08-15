@@ -25,8 +25,8 @@ export const selectFilteredItems = (state: VaultState): VaultItem[] => {
 
   return items.filter((item) => {
     const textMatch = query
-      ? [item.name, item.username, item.url ?? ''].some((field) =>
-          fuzzyMatch(field, query),
+      ? [item.name, item.username, item.url ?? '', item.notes ?? ''].some(
+          (field) => fuzzyMatch(field, query),
         )
       : true
     const folderMatch = folder ? item.folder === folder : true
