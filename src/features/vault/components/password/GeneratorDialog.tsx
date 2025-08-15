@@ -25,10 +25,8 @@ export const useGeneratorDialog = create<GeneratorState>((set) => ({
 
 export default function GeneratorDialog() {
   const { open, hide } = useGeneratorDialog()
-  const { selectedId, updateItemPartial } = useVaultStore((s) => ({
-    selectedId: s.selectedId,
-    updateItemPartial: s.updateItemPartial,
-  }))
+  const selectedId = useVaultStore((s) => s.selectedId)
+  const updateItemPartial = useVaultStore((s) => s.updateItemPartial)
   const showToast = useToast((s) => s.show)
 
   const [length, setLength] = useState(16)

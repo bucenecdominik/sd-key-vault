@@ -19,7 +19,8 @@ const folders = [
 const drawerWidth = 240
 
 export default function Sidebar() {
-  const { items, filters } = useVaultStore((s) => ({ items: s.items, filters: s.filters }))
+  const items = useVaultStore((s) => s.items)
+  const filters = useVaultStore((s) => s.filters)
   const setFolder = useVaultStore((s) => s.setFolder)
 
   const folderCounts = useMemo(() => {
