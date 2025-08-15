@@ -1,8 +1,3 @@
-import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import LockIcon from '@mui/icons-material/Lock'
 import type { Password } from '@types'
 
 interface PasswordGridProps {
@@ -12,31 +7,22 @@ interface PasswordGridProps {
 
 export default function PasswordGrid({ passwords, onSelect }: PasswordGridProps) {
   return (
-    <Grid
-      container
-      spacing={2}
-      sx={{ flexGrow: 1, overflow: 'auto', bgcolor: 'background.paper', p: 2 }}
-    >
+    <div className="grid flex-grow grid-cols-3 gap-2 overflow-auto bg-white p-2">
       {passwords.map((p) => (
-        <Grid item xs={4} key={p.Id}>
-          <Paper
-            variant="outlined"
-            onClick={() => onSelect(p)}
-            sx={{ p: 1.5, cursor: 'pointer' }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-              <LockIcon fontSize="small" sx={{ mr: 1 }} />
-              <Typography variant="body1" fontWeight={500}>
-                {p.Name}
-              </Typography>
-            </Box>
-            <Typography variant="caption" color="text.secondary">
-              {new Date(p.UpdatedAt).toLocaleDateString()}
-            </Typography>
-          </Paper>
-        </Grid>
+        <div
+          key={p.Id}
+          onClick={() => onSelect(p)}
+          className="cursor-pointer rounded border p-2 hover:bg-gray-100"
+        >
+          <div className="mb-1 flex items-center">
+            <span className="mr-1 text-sm">🔒</span>
+            <span className="font-medium">{p.Name}</span>
+          </div>
+          <div className="text-xs text-gray-500">
+            {new Date(p.UpdatedAt).toLocaleDateString()}
+          </div>
+        </div>
       ))}
-    </Grid>
+    </div>
   )
 }
-

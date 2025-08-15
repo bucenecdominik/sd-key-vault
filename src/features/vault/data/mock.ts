@@ -6,6 +6,7 @@ export interface VaultItem {
   url?: string
   tags: string[]
   folder?: string
+  updatedAt: string
 }
 
 export const mockVaultItems: VaultItem[] = [
@@ -17,6 +18,7 @@ export const mockVaultItems: VaultItem[] = [
     url: 'https://github.com',
     tags: ['development', 'code'],
     folder: 'Work',
+    updatedAt: '2024-02-15T10:00:00Z',
   },
   {
     id: 'banking',
@@ -26,6 +28,7 @@ export const mockVaultItems: VaultItem[] = [
     url: 'https://bank.example.com',
     tags: ['finance'],
     folder: 'Personal',
+    updatedAt: '2024-03-20T09:30:00Z',
   },
   {
     id: 'server-prod',
@@ -35,6 +38,7 @@ export const mockVaultItems: VaultItem[] = [
     url: 'ssh://prod.server',
     tags: ['server', 'prod'],
     folder: 'Infrastructure',
+    updatedAt: '2024-01-05T08:00:00Z',
   },
   {
     id: 'reddit',
@@ -44,5 +48,6 @@ export const mockVaultItems: VaultItem[] = [
     url: 'https://reddit.com',
     tags: ['social'],
     folder: 'Personal',
+    updatedAt: '2024-04-10T12:00:00Z',
   },
 ]
