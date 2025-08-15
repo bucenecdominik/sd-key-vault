@@ -16,10 +16,12 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import DeleteForever from '@mui/icons-material/DeleteForever';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import { useVaultStore } from '../../../app/store/vault';
 import { useToast } from '../../../app/store/toast';
 import ConfirmDialog from './common/ConfirmDialog';
+import GeneratorDialog from './password/GeneratorDialog';
 
 export default function DetailPanel() {
   const selectedId = useVaultStore((s) => s.selectedId);
@@ -29,6 +31,7 @@ export default function DetailPanel() {
 
   const [showPass, setShowPass] = React.useState(false);
   const [askDelete, setAskDelete] = React.useState(false);
+  const [genOpen, setGenOpen] = React.useState(false);
 
   if (!selectedId || !item) {
     return (
@@ -46,6 +49,12 @@ export default function DetailPanel() {
     update(item.id, { password: '' });
     setAskDelete(false);
     toast({ message: 'Heslo bylo smazáno', severity: 'success' });
+  };
+
+  const onUseGenerated = (pwd: string) => {
+    update(item.id, { password: pwd });
+    setGenOpen(false);
+    toast({ message: 'Heslo bylo vygenerováno', severity: 'success' });
   };
 
   return (
@@ -117,6 +126,17 @@ export default function DetailPanel() {
               ),
             }}
           />
+          <Tooltip title="Vygenerovat heslo">
+            <span>
+              <IconButton
+                color="primary"
+                onClick={() => setGenOpen(true)}
+                aria-label="Vygenerovat heslo"
+              >
+                <AutoFixHighIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
           <Tooltip title="Smazat heslo">
             <span>
               <IconButton
@@ -157,6 +177,12 @@ export default function DetailPanel() {
         confirmText="Smazat"
         onConfirm={onDeletePassword}
         onClose={() => setAskDelete(false)}
+      />
+
+      <GeneratorDialog
+        open={genOpen}
+        onClose={() => setGenOpen(false)}
+        onUse={onUseGenerated}
       />
     </Card>
   );

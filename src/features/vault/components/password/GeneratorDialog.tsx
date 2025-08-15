@@ -1,97 +1,108 @@
-import { useState } from 'react'
-import { create } from 'zustand'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import TextField from '@mui/material/TextField'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
-import Button from '@mui/material/Button'
-import { useVaultStore } from '../../../../app/store/vault'
-import { useToast } from '../../../../app/store/toast'
+import * as React from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import ContentCopy from '@mui/icons-material/ContentCopy';
 
-interface GeneratorState {
-  open: boolean
-  show: () => void
-  hide: () => void
+function generatePassword(length: number, opts: { lower: boolean; upper: boolean; numbers: boolean; symbols: boolean; }) {
+  const L = 'abcdefghijklmnopqrstuvwxyz';
+  const U = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const N = '0123456789';
+  const S = '!@#$%^&*()-_=+[]{};:,.<>/?';
+  let pool = '';
+  if (opts.lower) pool += L;
+  if (opts.upper) pool += U;
+  if (opts.numbers) pool += N;
+  if (opts.symbols) pool += S;
+  if (!pool) pool = L + U + N;
+  let out = '';
+  const array = new Uint32Array(length);
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    crypto.getRandomValues(array);
+    for (let i = 0; i < length; i++) out += pool[array[i] % pool.length];
+  } else {
+    for (let i = 0; i < length; i++) out += pool[Math.floor(Math.random() * pool.length)];
+  }
+  return out;
 }
 
-export const useGeneratorDialog = create<GeneratorState>((set) => ({
-  open: false,
-  show: () => set({ open: true }),
-  hide: () => set({ open: false }),
-}))
+export interface GeneratorDialogProps {
+  open: boolean;
+  initialLength?: number;
+  onClose: () => void;
+  onUse: (password: string) => void;
+}
 
-export default function GeneratorDialog() {
-  const { open, hide } = useGeneratorDialog()
-  const selectedId = useVaultStore((s) => s.selectedId)
-  const updateItemPartial = useVaultStore((s) => s.updateItemPartial)
-  const showToast = useToast()
+export default function GeneratorDialog({ open, initialLength = 16, onClose, onUse }: GeneratorDialogProps) {
+  const [length, setLength] = React.useState(initialLength);
+  const [lower, setLower] = React.useState(true);
+  const [upper, setUpper] = React.useState(true);
+  const [numbers, setNumbers] = React.useState(true);
+  const [symbols, setSymbols] = React.useState(false);
+  const [pwd, setPwd] = React.useState('');
 
-  const [length, setLength] = useState(16)
-  const [numbers, setNumbers] = useState(true)
-  const [symbols, setSymbols] = useState(false)
-  const [password, setPassword] = useState('')
+  const regen = React.useCallback(() => {
+    setPwd(generatePassword(length, { lower, upper, numbers, symbols }));
+  }, [length, lower, upper, numbers, symbols]);
 
-  const generate = () => {
-    const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    const nums = '0123456789'
-    const syms = '!@#$%^&*()_+-=[]{}|;:,.<>?'
-    let chars = letters
-    if (numbers) chars += nums
-    if (symbols) chars += syms
-    let result = ''
-    for (let i = 0; i < length; i++) {
-      result += chars[Math.floor(Math.random() * chars.length)]
-    }
-    setPassword(result)
-  }
-
-  const copy = async () => {
-    if (!password) return
-    await navigator.clipboard.writeText(password)
-    showToast({ message: 'Zkopírováno' })
-  }
-
-  const apply = () => {
-    if (!password || !selectedId) return
-    updateItemPartial(selectedId, { password })
-    hide()
-  }
+  React.useEffect(() => {
+    if (open) regen();
+  }, [open, regen]);
 
   return (
-    <Dialog open={open} onClose={hide}>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Generátor hesla</DialogTitle>
-      <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+      <DialogContent sx={{ display: 'grid', gap: 2, pt: 1 }}>
         <TextField
-          label={`Délka: ${length}`}
-          type="range"
+          label="Délka"
+          type="number"
+          fullWidth
+          margin="dense"
           value={length}
-          onChange={(e) => setLength(Number(e.target.value))}
-          inputProps={{ min: 8, max: 64 }}
+          onChange={(e) => setLength(Math.max(6, Math.min(128, Number(e.target.value) || 0)))}
+          InputLabelProps={{ shrink: true }}
+          // MUI v6: místo deprecated inputProps použij slotProps
+          slotProps={{ input: { inputProps: { min: 6, max: 128 } } }}
         />
-        <FormControlLabel
-          control={<Checkbox checked={numbers} onChange={(e) => setNumbers(e.target.checked)} />}
-          label="Čísla"
+        <FormGroup row>
+          <FormControlLabel control={<Checkbox checked={lower} onChange={(e) => setLower(e.target.checked)} />} label="malá písmena" />
+          <FormControlLabel control={<Checkbox checked={upper} onChange={(e) => setUpper(e.target.checked)} />} label="VELKÁ písmena" />
+          <FormControlLabel control={<Checkbox checked={numbers} onChange={(e) => setNumbers(e.target.checked)} />} label="čísla" />
+          <FormControlLabel control={<Checkbox checked={symbols} onChange={(e) => setSymbols(e.target.checked)} />} label="symboly" />
+        </FormGroup>
+        <TextField
+          label="Vygenerované heslo"
+          value={pwd}
+          onChange={(e) => setPwd(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={regen} aria-label="Vygenerovat nové">
+                  <RefreshIcon />
+                </IconButton>
+                <IconButton onClick={() => navigator.clipboard.writeText(pwd)} aria-label="Kopírovat">
+                  <ContentCopy />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
-        <FormControlLabel
-          control={<Checkbox checked={symbols} onChange={(e) => setSymbols(e.target.checked)} />}
-          label="Symboly"
-        />
-        <TextField label="Heslo" value={password} InputProps={{ readOnly: true }} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={generate}>Vygenerovat</Button>
-        <Button onClick={copy} disabled={!password}>
-          Kopírovat
-        </Button>
-        <Button onClick={apply} disabled={!password || !selectedId}>
-          Použít
-        </Button>
-        <Button onClick={hide}>Zavřít</Button>
+        <Button onClick={onClose}>Zavřít</Button>
+        <Button variant="contained" onClick={() => onUse(pwd)} disabled={!pwd}>Použít do položky</Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
-

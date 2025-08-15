@@ -5,7 +5,6 @@ import {
   Toolbar,
   TextField,
   InputAdornment,
-  Typography,
   Button,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -42,14 +41,17 @@ export default function Topbar() {
       init(mergeById(items, incoming));
       toast({ message: `Načteno ${incoming.length} položek`, severity: 'success' });
     } catch (err: unknown) {
-      toast({ message: (err instanceof Error ? err.message : 'Import selhal'), severity: 'error' });
+      const message =
+        err && typeof err === 'object' && 'message' in err && typeof (err as { message?: unknown }).message === 'string'
+          ? (err as { message: string }).message
+          : 'Import selhal';
+      toast({ message, severity: 'error' });
     }
   };
 
   return (
     <AppBar position="static" color="default" elevation={0}>
       <Toolbar sx={{ gap: 2 }}>
-        <Typography variant="h6" sx={{ flexGrow: 0 }}>Klíčenka</Typography>
         <TextField
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -64,8 +66,8 @@ export default function Topbar() {
           }}
           sx={{ minWidth: 300, flexGrow: 1, maxWidth: 640 }}
         />
-        <input id="vault-import" type="file" accept="application/json"
-               style={{ display: 'none' }} onChange={onImport} />
+
+        <input id="vault-import" type="file" accept="application/json" style={{ display: 'none' }} onChange={onImport} />
         <label htmlFor="vault-import">
           <Button variant="outlined" startIcon={<UploadIcon />} component="span">Import</Button>
         </label>

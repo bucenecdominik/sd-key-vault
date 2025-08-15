@@ -17,17 +17,20 @@ export async function importItems(file: File): Promise<VaultItem[]> {
   const data = JSON.parse(text);
   if (!Array.isArray(data)) throw new Error('Soubor nemá správný formát: pole položek.');
   // Velmi jednoduchá validace tvaru
-  const mapped: VaultItem[] = data.map((x: any) => ({
-    id: String(x.id),
-    name: String(x.name),
-    username: x.username ? String(x.username) : undefined,
-    password: x.password ? String(x.password) : undefined,
-    url: x.url ? String(x.url) : undefined,
-    folder: x.folder,
-    updatedAt: x.updatedAt ? String(x.updatedAt) : new Date().toISOString(),
-    notes: x.notes ? String(x.notes) : undefined,
-    icon: x.icon,
-  }));
+  const mapped: VaultItem[] = data.map((x: unknown) => {
+    const item = x as Partial<VaultItem>;
+    return {
+      id: String(item.id),
+      name: String(item.name),
+      username: item.username ? String(item.username) : undefined,
+      password: item.password ? String(item.password) : undefined,
+      url: item.url ? String(item.url) : undefined,
+      folder: item.folder,
+      updatedAt: item.updatedAt ? String(item.updatedAt) : new Date().toISOString(),
+      notes: item.notes ? String(item.notes) : undefined,
+      icon: item.icon,
+    };
+  });
   return mapped;
 }
 
