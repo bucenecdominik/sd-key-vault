@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import type { VaultItem } from '../../features/vault/data/mock'
 import { mockVaultItems } from '../../features/vault/data/mock'
 
-interface VaultState {
+export interface VaultState {
   items: VaultItem[]
   filters: {
     text: string

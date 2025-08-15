@@ -3,6 +3,7 @@ export interface VaultItem {
   name: string
   username: string
   password: string
+  url?: string
   tags: string[]
   folder?: string
 }
@@ -13,6 +14,7 @@ export const mockVaultItems: VaultItem[] = [
     name: 'GitHub',
     username: 'octocat',
     password: 'secret',
+    url: 'https://github.com',
     tags: ['development', 'code'],
     folder: 'Work',
   },
@@ -21,6 +23,7 @@ export const mockVaultItems: VaultItem[] = [
     name: 'Bankovnictví',
     username: 'jdoe',
     password: 'bankpass',
+    url: 'https://bank.example.com',
     tags: ['finance'],
     folder: 'Personal',
   },
@@ -29,6 +32,7 @@ export const mockVaultItems: VaultItem[] = [
     name: 'Server – prod',
     username: 'root',
     password: 'prodpass',
+    url: 'ssh://prod.server',
     tags: ['server', 'prod'],
     folder: 'Infrastructure',
   },
@@ -37,6 +41,7 @@ export const mockVaultItems: VaultItem[] = [
     name: 'Reddit',
     username: 'redditUser',
     password: 'redditpass',
+    url: 'https://reddit.com',
     tags: ['social'],
     folder: 'Personal',
   },
