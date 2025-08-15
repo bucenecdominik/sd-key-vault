@@ -2,12 +2,14 @@ import { create } from 'zustand'
 import type { VaultItem } from 'src/types/vault'
 import { mockVaultItems } from 'src/mocks'
 
+export interface VaultFilters {
+  text: string
+  folder?: string
+}
+
 export interface VaultState {
   items: VaultItem[]
-  filters: {
-    text: string
-    folder?: string
-  }
+  filters: VaultFilters
   selectedId?: string
   setItems: (items: VaultItem[]) => void
   setFilterText: (text: string) => void
