@@ -1,5 +1,5 @@
 import type { VaultState } from '../../app/store/vault'
-import type { VaultItem } from './data/mock'
+import type { VaultItem } from 'src/types/vault'
 
 const fuzzyMatch = (target: string, query: string): boolean => {
   const t = target.toLowerCase()

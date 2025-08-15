@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import type { VaultItem } from '../../features/vault/data/mock'
-import { mockVaultItems } from '../../features/vault/data/mock'
+import type { VaultItem } from 'src/types/vault'
+import { mockVaultItems } from 'src/mocks'
 
 export interface VaultState {
   items: VaultItem[]
