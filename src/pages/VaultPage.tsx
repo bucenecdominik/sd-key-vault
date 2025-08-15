@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Box from '@mui/material/Box'
 import Sidebar from '../features/vault/components/Sidebar'
 import Topbar from '../features/vault/components/Topbar'
@@ -12,8 +12,12 @@ import { useVaultStore } from '../app/store/vault'
 export default function VaultPage() {
   const init = useVaultStore((s) => s.init)
 
+  const initialized = useRef(false)
+
   useEffect(() => {
+    if (initialized.current) return
     init(mockVaultItems)
+    initialized.current = true
   }, [init])
 
   return (
