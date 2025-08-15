@@ -9,15 +9,17 @@ import {
   Button,
   MenuItem,
   Typography,
+  Stack,
+  Tooltip,
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import ContentCopy from '@mui/icons-material/ContentCopy';
+import DeleteForever from '@mui/icons-material/DeleteForever';
 
 import { useVaultStore } from '../../../app/store/vault';
 import { useToast } from '../../../app/store/toast';
-
-type Folder = 'Work' | 'Personal';
+import ConfirmDialog from './common/ConfirmDialog';
 
 export default function DetailPanel() {
   const selectedId = useVaultStore((s) => s.selectedId);
@@ -26,6 +28,7 @@ export default function DetailPanel() {
   const toast = useToast();
 
   const [showPass, setShowPass] = React.useState(false);
+  const [askDelete, setAskDelete] = React.useState(false);
 
   if (!selectedId || !item) {
     return (
@@ -39,15 +42,23 @@ export default function DetailPanel() {
     toast({ message: 'Zkopírováno', severity: 'success' });
   };
 
+  const onDeletePassword = () => {
+    update(item.id, { password: '' });
+    setAskDelete(false);
+    toast({ message: 'Heslo bylo smazáno', severity: 'success' });
+  };
+
   return (
     <Card variant="outlined" sx={{ m: 2 }}>
       <CardContent sx={{ display: 'grid', gap: 2 }}>
         <Typography variant="h6">{item.name}</Typography>
+
         <TextField
           label="Název"
           value={item.name}
           onChange={(e) => update(item.id, { name: e.target.value })}
         />
+
         <TextField
           label="URL"
           value={item.url ?? ''}
@@ -64,6 +75,7 @@ export default function DetailPanel() {
             ),
           }}
         />
+
         <TextField
           label="Uživatel"
           value={item.username ?? ''}
@@ -71,41 +83,64 @@ export default function DetailPanel() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => copy(item.username)} aria-label="Kopírovat uživatele">
-                  <ContentCopy />
-                </IconButton>
+                <Tooltip title="Kopírovat uživatele">
+                  <IconButton onClick={() => copy(item.username)} aria-label="Kopírovat uživatele">
+                    <ContentCopy />
+                  </IconButton>
+                </Tooltip>
               </InputAdornment>
             ),
           }}
         />
-        <TextField
-          label="Heslo"
-          type={showPass ? 'text' : 'password'}
-          value={item.password ?? ''}
-          onChange={(e) => update(item.id, { password: e.target.value })}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPass((v) => !v)} aria-label="Zobrazit/skrýt heslo">
-                  {showPass ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-                <IconButton onClick={() => copy(item.password)} aria-label="Kopírovat heslo">
-                  <ContentCopy />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <TextField
+            fullWidth
+            label="Heslo"
+            type={showPass ? 'text' : 'password'}
+            value={item.password ?? ''}
+            onChange={(e) => update(item.id, { password: e.target.value })}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Tooltip title={showPass ? 'Skrýt' : 'Zobrazit'}>
+                    <IconButton onClick={() => setShowPass((v) => !v)} aria-label="Zobrazit/skrýt heslo">
+                      {showPass ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Kopírovat heslo">
+                    <IconButton onClick={() => copy(item.password)} aria-label="Kopírovat heslo">
+                      <ContentCopy />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Tooltip title="Smazat heslo">
+            <span>
+              <IconButton
+                color="error"
+                onClick={() => setAskDelete(true)}
+                aria-label="Smazat heslo"
+              >
+                <DeleteForever />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </Stack>
+
         <TextField
           select
           label="Složka"
           value={item.folder ?? ''}
-          onChange={(e) => update(item.id, { folder: (e.target.value as Folder) || undefined })}
+          onChange={(e) => update(item.id, { folder: (e.target.value as any) || undefined })}
         >
           <MenuItem value="">(Žádná)</MenuItem>
           <MenuItem value="Work">Práce</MenuItem>
           <MenuItem value="Personal">Osobní</MenuItem>
         </TextField>
+
         <TextField
           label="Poznámky"
           value={item.notes ?? ''}
@@ -114,6 +149,15 @@ export default function DetailPanel() {
           minRows={3}
         />
       </CardContent>
+
+      <ConfirmDialog
+        open={askDelete}
+        title="Smazat heslo?"
+        description="Tato akce vyprázdní pole hesla u této položky. Pokračovat?"
+        confirmText="Smazat"
+        onConfirm={onDeletePassword}
+        onClose={() => setAskDelete(false)}
+      />
     </Card>
   );
 }

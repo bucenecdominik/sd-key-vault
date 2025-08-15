@@ -1,4 +1,4 @@
-
+import * as React from 'react';
 import { useEffect, useRef } from 'react';
 import { Box, Toolbar } from '@mui/material';
 
@@ -10,16 +10,21 @@ import ToastHost from '../features/vault/components/ToastHost';
 
 import { useVaultStore } from '../app/store/vault';
 import { mockVaultItems } from '../mocks';
+import { useUrlState } from '../app/hooks/useUrlState';
 
 export default function VaultPage() {
   const init = useVaultStore((s) => s.init);
   const inited = useRef(false);
 
+  // DEV bootstrap mocků
   useEffect(() => {
     if (inited.current) return;
-    inited.current = true; // StrictMode guard
+    inited.current = true;
     init(mockVaultItems);
   }, [init]);
+
+  // URL sync (q, folder, id)
+  useUrlState();
 
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: '240px 1fr 380px', minHeight: '100vh' }}>
