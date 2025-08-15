@@ -18,7 +18,6 @@ export default function DetailPanel() {
   const item = items.find((i) => i.id === selectedId)
   const showToast = useToast((s) => s.show)
   const [showPassword, setShowPassword] = useState(false)
-  const [tagInput, setTagInput] = useState('')
   const openGenerator = useGeneratorDialog((s) => s.show)
 
   if (!item) {
@@ -28,22 +27,6 @@ export default function DetailPanel() {
   const handleCopy = async (text: string) => {
     await navigator.clipboard.writeText(text)
     showToast('Zkopírováno')
-  }
-
-  const handleAddTag = () => {
-    const value = tagInput.trim()
-    if (!value || item.tags.includes(value)) {
-      setTagInput('')
-      return
-    }
-    updateItemPartial(item.id, { tags: [...item.tags, value] })
-    setTagInput('')
-  }
-
-  const handleRemoveTag = (tag: string) => {
-    updateItemPartial(item.id, {
-      tags: item.tags.filter((t) => t !== tag),
-    })
   }
 
   const folderOptions = [...folders]
@@ -158,39 +141,6 @@ export default function DetailPanel() {
               </option>
             ))}
           </select>
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium">Štítky</label>
-          <div className="flex flex-wrap gap-1">
-            {item.tags.map((tag) => (
-              <span
-                key={tag}
-                className="flex items-center gap-1 rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-700"
-              >
-                {tag}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveTag(tag)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-            <input
-              type="text"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ',') {
-                  e.preventDefault()
-                  handleAddTag()
-                }
-              }}
-              className="m-1 flex-1 min-w-[80px] rounded border px-2 py-1 text-sm"
-              placeholder="Přidej štítek"
-            />
-          </div>
         </div>
         <div>
           <label className="mb-1 block text-sm font-medium">Poznámky</label>

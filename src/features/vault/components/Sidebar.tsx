@@ -7,27 +7,20 @@ const folders = [
   { key: 'Personal', label: 'Osobní' },
 ]
 
-const tags = ['work', 'dev', 'finance', 'secret', 'social']
-
 export default function Sidebar() {
   const filters = useVaultStore((s) => s.filters)
   const setFolder = useVaultStore((s) => s.setFolder)
-  const toggleTag = useVaultStore((s) => s.toggleTag)
   const filteredItems = useVaultStore(selectFilteredItems)
 
   // counts are computed from items after applying current search and filter settings
-  const { folderCounts, tagCounts } = useMemo(() => {
-    const fc: Record<string, number> = {}
-    const tc: Record<string, number> = {}
+  const folderCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
     filteredItems.forEach((item) => {
       if (item.folder) {
-        fc[item.folder] = (fc[item.folder] ?? 0) + 1
+        counts[item.folder] = (counts[item.folder] ?? 0) + 1
       }
-      item.tags.forEach((t) => {
-        tc[t] = (tc[t] ?? 0) + 1
-      })
     })
-    return { folderCounts: fc, tagCounts: tc }
+    return counts
   }, [filteredItems])
 
   const handleFolderClick = (folder: string) => {
@@ -53,30 +46,6 @@ export default function Sidebar() {
                 <span>{f.label}</span>
                 <span className="rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-700">
                   {folderCounts[f.key] ?? 0}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section>
-        <h2 className="mb-2 text-sm font-semibold text-gray-500">Štítky</h2>
-        <ul className="space-y-1">
-          {tags.map((tag) => (
-            <li key={tag}>
-              <button
-                type="button"
-                onClick={() => toggleTag(tag)}
-                className={`flex w-full items-center justify-between rounded px-2 py-1 text-left ${
-                  filters.tags.includes(tag)
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                <span>{tag}</span>
-                <span className="rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-700">
-                  {tagCounts[tag] ?? 0}
                 </span>
               </button>
             </li>

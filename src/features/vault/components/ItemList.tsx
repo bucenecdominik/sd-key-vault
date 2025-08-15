@@ -14,7 +14,7 @@ export default function ItemList() {
             <button
               type="button"
               onClick={() => selectItem(item.id)}
-              className="flex w-full items-center justify-between rounded border p-2 text-left hover:bg-gray-100"
+              className="flex w-full items-center rounded border p-2 text-left hover:bg-gray-100"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded bg-gray-200">
@@ -26,16 +26,6 @@ export default function ItemList() {
                     {formatRelative(item.updatedAt)}
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {item.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-700"
-                  >
-                    {tag}
-                  </span>
-                ))}
               </div>
             </button>
           </li>

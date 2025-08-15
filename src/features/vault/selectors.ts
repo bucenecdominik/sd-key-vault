@@ -18,20 +18,19 @@ const fuzzyMatch = (target: string, query: string): boolean => {
 export const selectFilteredItems = (state: VaultState): VaultItem[] => {
   const {
     items,
-    filters: { text, tags, folder },
+    filters: { text, folder },
   } = state
 
   const query = text.trim()
 
   return items.filter((item) => {
     const textMatch = query
-      ? [item.name, item.username, item.url ?? '', item.tags.join(' ')].some((field) =>
+      ? [item.name, item.username, item.url ?? ''].some((field) =>
           fuzzyMatch(field, query),
         )
       : true
-    const tagsMatch = tags.length ? tags.every((tag) => item.tags.includes(tag)) : true
     const folderMatch = folder ? item.folder === folder : true
-    return textMatch && tagsMatch && folderMatch
+    return textMatch && folderMatch
   })
 }
 
