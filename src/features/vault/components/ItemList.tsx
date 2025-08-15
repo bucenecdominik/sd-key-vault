@@ -14,19 +14,15 @@ export default function ItemList() {
             <button
               type="button"
               onClick={() => selectItem(item.id)}
-              className="flex w-full items-center rounded border p-2 text-left hover:bg-gray-100"
+              className="flex w-full items-center gap-3 rounded border p-2 hover:bg-gray-100"
             >
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded bg-gray-200">
-                  🔐
-                </div>
-                <div>
-                  <div className="font-medium">{item.name}</div>
-                  <div className="text-xs text-gray-500">
-                    {formatRelative(item.updatedAt)}
-                  </div>
-                </div>
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-gray-200">
+                🔐
               </div>
+              <span className="flex-1 text-left font-medium">{item.name}</span>
+              <span className="text-xs text-gray-500">
+                {formatRelative(item.updatedAt)}
+              </span>
             </button>
           </li>
         ))}
